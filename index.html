@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Kuis Islam</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+             background-image: url(background.jpg);
+     background-position: center;
+     background-size:cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+            
+        }
+
+        .quiz-container {
+            background:#fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+            padding: 25px;
+            width: 280px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #category-selection {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .category-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 10px;
+            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .category-button:hover {
+            background-color: #0056b3;
+        }
+
+        #quiz {
+            display: none;
+        }
+
+        .quiz-question {
+            margin-bottom: 20px;
+        }
+
+        .quiz-question h2 {
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .answer {
+            background-color:green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .answer.correct {
+            background-color: #007bff;
+        }
+
+        .answer.incorrect {
+            background-color: red;
+        }
+
+        .next-button {
+            display: none;
+            background-color: #ffc107;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .next-button:hover {
+            background-color: #e0a800;
+        }
+
+        #result-container {
+            display: none;
+            text-align: center;
+        }
+
+        #result {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        #feedback {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        #appreciation img {
+            width: 100px;
+            height: 100px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="quiz-container">
+<p align="center"><a href="index.html"><b><i class="fas fa-home">ILHAM</i></b></a></p>
+    <h3><p align="center">Kuis Islam</p></h3>
+    <div id="category-selection">
+        <h4>Pilih Kategori Kuis</h4>
+        <button class="category-button" onclick="startQuiz('nabi')">Tentang Nabi</button>
+        <button class="category-button" onclick="startQuiz('sejarah')">Sejarah Islam</button>
+        <button class="category-button" onclick="startQuiz('hadits')">Tentang Hadits</button>
+        <button class="category-button" onclick="startQuiz('alquran')">Tentang Al-Qur'an</button>
+       
+    </div>
+
+    <div id="quiz">
+        <div class="quiz-question">
+            <h2 id="question">Question will appear here</h2>
+            <ul id="answers-list"></ul>
+        </div>
+        <p id="feedback"></p>
+        <button id="next-btn" class="next-button">Selanjutnya</button>
+    </div>
+
+    <div id="result-container">
+        <h2 id="result"></h2>
+        <div id="appreciation">
+            <img id="appreciation-img" src="main1.png" alt="Appreciation Image">
+        </div>
+    </div>
+</div>
+
+<script>
+    const questionsNabi = [
+        {
+            question: "Siapa nabi pertama yang diutus Allah?",
+            answers: ["Nabi Adam", "Nabi Nuh", "Nabi Ibrahim", "Nabi Musa"],
+            correct: 0
+        },
+        {
+            question: "Siapa ayah dari Nabi Muhammad SAW?",
+            answers: ["Abdullah", "Abdul Muttalib", "Abu Talib", "Hamzah"],
+            correct: 0
+        },
+        {
+            question: "Siapa nabi yang diberi mukjizat membelah laut?",
+            answers: ["Nabi Musa", "Nabi Isa", "Nabi Ibrahim", "Nabi Yusuf"],
+            correct: 0
+        },
+        {
+            question: "Nabi Muhammad SAW lahir pada tahun?",
+            answers: ["570 M", "571 M", "572 M", "573 M"],
+            correct: 1
+        },
+        {
+            question: "Siapa nabi yang membangun Ka'bah?",
+            answers: ["Nabi Ibrahim", "Nabi Ismail", "Nabi Adam", "Nabi Sulaiman"],
+            correct: 0
+        }
+       
+    ];
+
+    const questionsSejarah = [
+        {
+            question: "Kapan Rasulullah hijrah ke Madinah?",
+            answers: ["622 M", "610 M", "624 M", "630 M"],
+            correct: 0
+        },
+        {
+            question: "Perang apa yang terjadi pada tahun 624 M?",
+            answers: ["Perang Badar", "Perang Uhud", "Perang Hunain", "Perang Tabuk"],
+            correct: 0
+        },
+        {
+            question: "Siapa khalifah pertama setelah Nabi Muhammad SAW?",
+            answers: ["Abu Bakar", "Umar bin Khattab", "Utsman bin Affan", "Ali bin Abi Thalib"],
+            correct: 0
+        },
+        {
+            question: "Berapa lama masa pemerintahan Khalifah Abu Bakar?",
+            answers: ["2 tahun", "3 tahun", "5 tahun", "10 tahun"],
+            correct: 0
+        },
+        {
+            question: "Siapa khalifah yang membangun Masjid Al-Aqsa?",
+            answers: ["Umar bin Khattab", "Abu Bakar", "Utsman bin Affan", "Ali bin Abi Thalib"],
+            correct: 0
+        }
+    ];
+
+    const questionsHadits = [
+        {
+            question: "Siapa periwayat hadits terbanyak?",
+            answers: ["Abu Hurairah", "Aisyah", "Ibnu Abbas", "Umar bin Khattab"],
+            correct: 0
+        },
+        {
+            question: "Kitab hadits 'Shahih Al-Bukhari' ditulis oleh?",
+            answers: ["Imam Bukhari", "Imam Muslim", "Imam Ahmad", "Imam Malik"],
+            correct: 0
+        },
+        {
+            question: "Berapa jumlah hadits dalam kitab 'Shahih Al-Bukhari'?",
+            answers: ["7000", "8000", "6000", "5000"],
+            correct: 2
+        },
+        {
+            question: "Siapa yang dikenal sebagai 'Sayyidah Hadits'?",
+            answers: ["Aisyah", "Fatimah", "Ummu Salamah", "Hafshah"],
+            correct: 0
+        },
+        {
+            question: "Siapa sahabat yang meriwayatkan hadits tentang 10 sahabat yang dijamin masuk surga?",
+            answers: ["Abu Hurairah", "Abdurrahman bin Auf", "Utsman bin Affan", "Ali bin Abi Thalib"],
+            correct: 0
+        }
+    ];
+
+    const questionsAlquran = [
+        {
+            question: "Berapa jumlah surah dalam Al-Qur'an?",
+            answers: ["114", "115", "113", "112"],
+            correct: 0
+        },
+        {
+            question: "Surah apa yang pertama kali diturunkan?",
+            answers: ["Al-Alaq", "Al-Fatihah", "Al-Ikhlas", "Al-Baqarah"],
+            correct: 0
+        },
+        {
+            question: "Surah apa yang disebut sebagai 'jantung' Al-Qur'an?",
+            answers: ["Yasin", "Al-Baqarah", "Ar-Rahman", "Al-Kahf"],
+            correct: 0
+        },
+        {
+            question: "Berapa jumlah ayat dalam Al-Qur'an?",
+            answers: ["6236", "6300", "6200", "6350"],
+            correct: 0
+        },
+        {
+            question: "Surah terpanjang dalam Al-Qur'an adalah?",
+            answers: ["Al-Baqarah", "Al-Imran", "An-Nisa", "Al-Maidah"],
+            correct: 0
+        },
+    ];
+   
+     
+
+    let currentCategory = '';
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let shuffledQuestions = [];
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function startQuiz(category) {
+        currentCategory = category;
+        currentQuestionIndex = 0;
+        score = 0;
+
+        switch (category) {
+            case 'nabi':
+                shuffledQuestions = shuffleArray([...questionsNabi]);
+                break;
+            case 'sejarah':
+                shuffledQuestions = shuffleArray([...questionsSejarah]);
+                break;
+            case 'hadits':
+                shuffledQuestions = shuffleArray([...questionsHadits]);
+                break;
+            case 'alquran':
+                shuffledQuestions = shuffleArray([...questionsAlquran]);
+                break;
+        }
+
+        document.getElementById('category-selection').style.display = 'none';
+        document.getElementById('quiz').style.display = 'block';
+
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const currentQuestion = shuffledQuestions[currentQuestionIndex];
+        document.getElementById('question').textContent = currentQuestion.question;
+
+        let answers = [...currentQuestion.answers];
+        shuffleArray(answers); // Shuffle the answers array to randomize
+
+        const answersList = document.getElementById('answers-list');
+        answersList.innerHTML = '';
+
+        answers.forEach((answer, index) => {
+            const li = document.createElement('li');
+            const button = document.createElement('button');
+            button.classList.add('answer');
+            button.textContent = answer;
+            button.onclick = () => checkAnswer(answer, currentQuestion.correct);
+            li.appendChild(button);
+            answersList.appendChild(li);
+        });
+
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function checkAnswer(selectedAnswer, correctIndex) {
+        const currentQuestion = shuffledQuestions[currentQuestionIndex];
+        const buttons = document.querySelectorAll('.answer');
+
+        buttons.forEach((button, index) => {
+            if (button.textContent === currentQuestion.answers[correctIndex]) {
+                button.classList.add('correct');
+            } else {
+                button.classList.add('incorrect');
+            }
+            button.disabled = true;
+        });
+
+        const feedback = document.getElementById('feedback');
+        if (selectedAnswer === currentQuestion.answers[correctIndex]) {
+            feedback.textContent = 'Benar!';
+            score += 20;
+        } else {
+            feedback.textContent = 'Salah!';
+        }
+
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    document.getElementById('next-btn').addEventListener('click', () => {
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < shuffledQuestions.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    });
+
+    function showResult() {
+        document.getElementById('quiz').style.display = 'none';
+        document.getElementById('result-container').style.display = 'block';
+        document.getElementById('result').textContent = `Skor akhir Anda: ${score}`;
+
+        const appreciationImg = document.getElementById('appreciation-img');
+        if (score === 100) {
+            appreciationImg.src = 'main4.png'; // Replace with the actual image path
+        } else if (score >= 60) {
+            appreciationImg.src = 'main3.jpg'; // Replace with the actual image path
+        } else {
+            appreciationImg.src = 'main2.jpg'; // Replace with the actual image path
+        }
+        appreciationImg.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
